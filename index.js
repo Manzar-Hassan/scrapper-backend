@@ -1,5 +1,5 @@
 import express from "express";
-import cors from "cors"
+import cors from "cors";
 import webdriver from "selenium-webdriver";
 import "chromedriver";
 
@@ -8,13 +8,13 @@ const url =
   "https://www.pinnacle.it/scommesse/calcio/uefa-champions-league/matchups/";
 
 //importing By for css selectors
-const { By, Builder } = webdriver;
+const { By, Builder, until } = webdriver;
 const PORT = process.env.PORT || 5000;
 
 //initializing the server
 const app = express();
 
-app.use(cors())
+app.use(cors());
 
 //function to receive a get request from client side
 app.get("/", async (request, response) => {
@@ -39,6 +39,7 @@ async function scrapeData() {
 
     //synchronizing
     await driver.manage().setTimeouts({ implicit: 500 });
+    await driver.wait(until.elementLocated(By.className("contenitoreRiga"),10000));
 
     //finding the required elements by id
     const requiredData = await driver.findElement(By.id("primo-blocco-sport"));
@@ -92,7 +93,7 @@ async function scrapeData() {
       }
     }
 
-    //quiting the browser after the task completes
+    //quiting the browser after the task completion
     driver.quit();
 
     //returning the fetched data
